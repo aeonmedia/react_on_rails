@@ -53,7 +53,7 @@ module ReactOnRailsHelper
     if options[:tag].nil?
       html_tag = :div
     else
-      html_tag = options[:tag]
+      html_tag = options[:id]
     end
 
     # Setup the page_loaded_js, which is the same regardless of prerendering or not!
@@ -71,8 +71,7 @@ module ReactOnRailsHelper
                     trace: trace(options),
                     generator_function: generator_function(options),
                     expect_turbolinks: turbolinks_loaded,
-                    dom_id: dom_id,
-                    html_tag: html_tag
+                    dom_id: dom_id
                   })
 
     # Create the HTML rendering part
@@ -86,7 +85,7 @@ module ReactOnRailsHelper
                                          :server_side, :raise_on_prerender_error)
     content_tag_options[:id] = dom_id
 
-    rendered_output = content_tag(:div,
+    rendered_output = content_tag(html_tag,
                                   server_rendered_html.html_safe,
                                   content_tag_options)
 
