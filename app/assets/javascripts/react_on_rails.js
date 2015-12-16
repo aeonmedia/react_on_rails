@@ -197,7 +197,8 @@
     if (generatorFunction) {
       return this[componentName](props, location);
     } else {
-      return React.createElement(htmlTag, props);
+      console.log(this[componentName])
+      return React.createElement(this[componentName], props);
     }
   }
 
