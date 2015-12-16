@@ -61,7 +61,7 @@ module ReactOnRailsHelper
     turbolinks_loaded = Object.const_defined?(:Turbolinks)
 
     component_specification_tag =
-      content_tag(html_tag,
+      content_tag(:div,
                   "",
                   class: "js-react-on-rails-component",
                   style: "display:none",
@@ -71,7 +71,8 @@ module ReactOnRailsHelper
                     trace: trace(options),
                     generator_function: generator_function(options),
                     expect_turbolinks: turbolinks_loaded,
-                    dom_id: dom_id
+                    dom_id: dom_id,
+                    html_tag: html_tag
                   })
 
     # Create the HTML rendering part

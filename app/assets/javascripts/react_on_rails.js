@@ -5,6 +5,7 @@
   ReactOnRails.serverRenderReactComponent = function(options) {
     var componentName = options.componentName;
     var domId = options.domId;
+    var htmlTag = options.htmlTag;
     var props = options.props;
     var trace = options.trace;
     var generatorFunction = options.generatorFunction;
@@ -14,7 +15,7 @@
     var hasErrors = false;
 
     try {
-      var reactElementOrRouterResult = createReactElementOrRouterResult(componentName, props,
+      var reactElementOrRouterResult = createReactElementOrRouterResult(htmlTag, componentName, props,
         domId, trace, generatorFunction, location);
       if (isRouterResult(reactElementOrRouterResult)) {
 
@@ -155,6 +156,7 @@
     var componentName = el.getAttribute('data-component-name');
     var domId = el.getAttribute('data-dom-id');
     var props = JSON.parse(el.getAttribute('data-props'));
+    var htmlTag = JSON.parse(el.getAttribute('data-html-tag'));
     props.innerHTML = el.innerHTML;
     var trace = JSON.parse(el.getAttribute('data-trace'));
     var generatorFunction = JSON.parse(el.getAttribute('data-generator-function'));
@@ -167,7 +169,7 @@
     try {
       var domNode = document.getElementById(domId);
       if (domNode) {
-        var reactElementOrRouterResult = createReactElementOrRouterResult(componentName, props,
+        var reactElementOrRouterResult = createReactElementOrRouterResult(htmlTag, componentName, props,
           domId, trace, generatorFunction);
         if (isRouterResult(reactElementOrRouterResult)) {
           throw new Error('You returned a server side type of react-router error: ' +
@@ -187,7 +189,7 @@
     }
   };
 
-  function createReactElementOrRouterResult(componentName, props, domId, trace, generatorFunction, location) {
+  function createReactElementOrRouterResult(htmlTag, componentName, props, domId, trace, generatorFunction, location) {
     if (trace) {
       console.log('RENDERED ' + componentName + ' to dom node with id: ' + domId);
     }
@@ -195,7 +197,7 @@
     if (generatorFunction) {
       return this[componentName](props, location);
     } else {
-      return React.createElement(this[componentName], props);
+      return React.createElement(htmlTag, props);
     }
   }
 
