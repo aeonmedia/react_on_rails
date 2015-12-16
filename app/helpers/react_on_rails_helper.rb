@@ -53,7 +53,7 @@ module ReactOnRailsHelper
     if options[:tag].nil?
       html_tag = :div
     else
-      html_tag = options[:id]
+      html_tag = options[:tag]
     end
 
     # Setup the page_loaded_js, which is the same regardless of prerendering or not!
