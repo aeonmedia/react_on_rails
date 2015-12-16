@@ -155,6 +155,7 @@
     var componentName = el.getAttribute('data-component-name');
     var domId = el.getAttribute('data-dom-id');
     var props = JSON.parse(el.getAttribute('data-props'));
+    props.innerHTML = el.innerHTML;
     var trace = JSON.parse(el.getAttribute('data-trace'));
     var generatorFunction = JSON.parse(el.getAttribute('data-generator-function'));
     var expectTurboLinks = JSON.parse(el.getAttribute('data-expect-turbo-links'));
