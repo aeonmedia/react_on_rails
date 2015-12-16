@@ -50,13 +50,18 @@ module ReactOnRailsHelper
     else
       dom_id = options[:id]
     end
+    if options[:tag].nil?
+      html_tag = :div
+    else
+      html_tag = options[:tag]
+    end
 
     # Setup the page_loaded_js, which is the same regardless of prerendering or not!
     # The reason is that React is smart about not doing extra work if the server rendering did its job.
     turbolinks_loaded = Object.const_defined?(:Turbolinks)
 
     component_specification_tag =
-      content_tag(:div,
+      content_tag(html_tag,
                   "",
                   class: "js-react-on-rails-component",
                   style: "display:none",
