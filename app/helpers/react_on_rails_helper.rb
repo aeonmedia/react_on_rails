@@ -65,7 +65,7 @@ module ReactOnRailsHelper
     turbolinks_loaded = Object.const_defined?(:Turbolinks)
 
     component_specification_tag =
-      content_tag(:div,
+      content_tag(html_tag,
                   "",
                   class: "js-react-on-rails-component",
                   style: "display:none",
