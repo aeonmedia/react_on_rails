@@ -35,7 +35,11 @@ module ReactOnRailsHelper
   #    raise_on_prerender_error: <true/false> Default to false. True will raise exception on server
   #       if the JS code throws
   #  Any other options are passed to the content tag, including the id.
-  def react_component(component_name, props = {}, options = {})
+  def react_component(component_name, props = {}, options = {}, &block)
+
+    if block
+      props[:innerHTML] = capture(&block)
+    end
     # Create the JavaScript and HTML to allow either client or server rendering of the
     # react_component.
     #
