@@ -89,8 +89,9 @@ module ReactOnRailsHelper
                                          :server_side, :raise_on_prerender_error)
     content_tag_options[:id] = dom_id
 
+    inner_content = server_rendered_html.empty? ? props[:innerHTML] : server_rendered_html.html_safe
     rendered_output = content_tag(html_tag,
-                                  server_rendered_html.html_safe,
+                                  inner_content,
                                   content_tag_options)
 
     # IMPORTANT: Ensure that we mark string as html_safe to avoid escaping.
