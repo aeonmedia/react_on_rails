@@ -3,15 +3,32 @@ All notable changes to this project will be documented in this file. Items under
 
 Contributors: please follow the recommendations outlined at [keepachangelog.com](http://keepachangelog.com/). Please use the existing headings and styling as a guide, and add a link for the version diff at the bottom of the file. Also, please update the `Unreleased` link to compare to the latest release version.
 
-## [Unreleased]
+## [3.0.0-beta.1]
 ##### Added
+- Added helper `redux_store` and associated JavaScript APIs that allow multiple React components to use the same store. Thus, you initialize the store, with props, separately from the components.
 - Added forman to gemspec in case new dev does not have it globally installed. [#248](https://github.com/shakacode/react_on_rails/pull/248)
-##### Changed
-- Changed the EnsureAssetsCompiled feature that ensures RSpec tests are run with the latest webpack bundles. Previously, webpack bundles would be rebuilt every test run, whether or not they actually needed to be. While one could around this by running webpack in the background to rebuild the static assets, doing so required users to name their webpack build script exactly correct as the technique relied on a `pgrep`.
-
-  Instead, the new functionality checks the mdate on each generated webpack bundle/asset against the mdate of every file inside of the `client` directory, which is all encapsulated by the standard library method `FileUtils.uptodate?` and is very performant. This eliminates the need to check for an existing webpack process because the webpack bundles will be up to date anyway if the latter is running.
-
-  Users need not make any changes to their code to benefit from the enhancement, assuming all of their generated files are output to `javascripts/generated`, `stylesheets/generated`, `fonts/generated`, or `images/generated`. [#251](https://github.com/shakacode/react_on_rails/pull/251)
+  
+##### Breaking Change  
+- Calls to `react_component` should use a named argument of props. For example, change this:
+  ```ruby
+  <%= react_component("ReduxSharedStoreApp", {}, prerender: false, trace: true) %>
+  ```
+ 
+  to
+  ```ruby
+  <%= react_component("ReduxSharedStoreApp", props: {}, prerender: false, trace: true) %>
+  ```
+  You'll get a deprecation message to change this.
+- Renamed `ReactOnRails.configure_rspec_to_compile_assets` to `ReactOnRails::TestHelper.configure_rspec_to_compile_assets`. The code has also been optimized to check for whether or not the compiled webpack bundles are up to date or not and will not run if not necessary. If you are using non-standard directories for your generated webpack assets (`app/assets/javascripts/generated` and `app/assets/stylesheets/generated`) or have additional directories you wish the helper to check, you need to update your ReactOnRails configuration accordingly. See [documentation](https://github.com/shakacode/react_on_rails/blob/master/docs/additional_reading/rspec_configuration.md) for how to do this.  [#253](https://github.com/shakacode/react_on_rails/pull/253).
+  
+##### Migration Steps v2 to v3
+- [spec/dummy/spec/rails_helper.rb](https://github.com/shakacode/react_on_rails/blob/master/spec%2Fdummy%2Fspec%2Frails_helper.rb#L36..38) for an example. Add this line to your `rails_helper.rb`:
+```ruby
+RSpec.configure do |config|
+  # Ensure that if we are running js tests, we are using latest webpack assets
+  ReactOnRails::TestHelper.configure_rspec_to_compile_assets(config)
+```
+- Change view helper calls to react_component to use the named param of `props`. See forum post [Using Regexp to update to ReactOnRails v3](http://forum.shakacode.com/t/using-regexp-to-update-to-reactonrails-v3/481).
 
 ## [2.3.0] - 2016-02-01
 ##### Added
@@ -142,7 +159,7 @@ Best done with Object destructing:
 ##### Fixed
 - Fix several generator related issues.
 
-[Unreleased]: https://github.com/shakacode/react_on_rails/compare/2.3.0...HEAD
+[3.0.0-beta.1]: https://github.com/shakacode/react_on_rails/compare/2.3.0...3.0.0-beta.1
 [2.3.0]: https://github.com/shakacode/react_on_rails/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/shakacode/react_on_rails/compare/2.1.1...2.2.0
 [2.1.1]: https://github.com/shakacode/react_on_rails/compare/v2.1.0...2.1.1
