@@ -2,8 +2,11 @@
 
 # NEWS
 
-* 2.3 has shipped on Monday, 2/1/2016. Please see the [Changelog](CHANGELOG.md) for details, and let us know if you see any issues! [Migration steps from 1.x](https://github.com/shakacode/react_on_rails/blob/master/CHANGELOG.md#migration-steps-v1-to-v2).
-* There was a fatal error when using the lastest version of Redux for server rendering. See [Redux #1335](https://github.com/rackt/redux/issues/1335). See [diff 3.1.6...3.1.4](https://github.com/rackt/redux/commit/e2e14d26f09ca729ae0555442f50fcfc45bfb423#diff-1fdf421c05c1140f6d71444ea2b27638). Workaround for server rendering: Use Redux 3.1.7 or upgrade to React On Rails v2.3.0.  [this commit](https://github.com/shakacode/react_on_rails/commit/59f1e68d3d233775e6abc63bff180ea59ac2d79e) on [PR #244](https://github.com/shakacode/react_on_rails/pull/244/).
+* 3.0.0.beta.1 has shipped on Monday, 2/8/2016. Please see the [Changelog](CHANGELOG.md) for details, and let us know if you see any issues! [Migration steps from 1.x](https://github.com/shakacode/react_on_rails/blob/master/CHANGELOG.md#migration-steps-v1-to-v2). [Migration steps from 2.x](https://github.com/shakacode/react_on_rails/blob/master/CHANGELOG.md#migration-steps-v2-to-v3).
+* 3.0.0 Highlights:
+  1. Support for ensuring JavaScript is current when running tests.
+  2. Support for multiple React components with one Redux store. So you can have a header React component and different body React components talking to the same Redux store!
+* There was a fatal error when using the lastest version of Redux for server rendering. See [Redux #1335](https://github.com/rackt/redux/issues/1335). See [diff 3.1.6...3.1.4](https://github.com/rackt/redux/commit/e2e14d26f09ca729ae0555442f50fcfc45bfb423#diff-1fdf421c05c1140f6d71444ea2b27638). Workaround for server rendering: Use Redux 3.1.7 or upgrade to React On Rails v2.3.0. [this commit](https://github.com/shakacode/react_on_rails/commit/59f1e68d3d233775e6abc63bff180ea59ac2d79e) on [PR #244](https://github.com/shakacode/react_on_rails/pull/244/).
 * 2.x Highlights:
   1. Fixed a **critical** problem with TurboLinks. Be sure to see [turbolinks docs](docs/additional_reading/turbolinks.md) for more information on how to debug TurboLinks issues.
   2. Provides a convenient helper to ensure that JavaScript assets are compiled before running tests.
@@ -218,17 +221,25 @@ Once the bundled files have been generated in your `app/assets/javascripts/gener
 This is how you actually render the React components you exposed to `window` inside of `clientRegistration` (and `global` inside of `serverRegistration` if you are server rendering).
 
 #### react_component
-`react_component(component_name, props = {}, options = {})`
+`react_component(component_name, options = {})`
 
 + **component_name:** Can be a React component, created using a ES6 class, or `React.createClass`, or a generator function that returns a React component.
-+ **props:** Ruby Hash which contains the properties to pass to the react object, or a JSON string. If you pass a string, we'll escape it for you.
 + **options:**
+  + **props:** Ruby Hash which contains the properties to pass to the react object, or a JSON string. If you pass a string, we'll escape it for you.
   + **prerender:** enable server-side rendering of component. Set to false when debugging!
   + **router_redirect_callback:** Use this option if you want to provide a custom handler for redirects on server rendering. If you don't specify this, we'll simply change the rendered output to a script that sets window.location to the new route. Set this up exactly like a generator_function. Your function will will take one parameter, containing all the values that react-router gives on a redirect request, such as pathname, search, etc.
   + **trace:** set to true to print additional debugging information in the browser. Defaults to true for development, off otherwise.
   + **replay_console:** Default is true. False will disable echoing server-rendering logs to the browser. While this can make troubleshooting server rendering difficult, so long as you have the default configuration of logging_on_server set to true, you'll still see the errors on the server.
   + **raise_on_prerender_error:** Default is false. True will throw an error on the server side rendering. Your controller will have to handle the error.
 + Any other options are passed to the content tag, including the id
+
+#### redux_store
+`redux_store(store_name, props = {})`
+
++ **store_name:** A name for the store. You'll refer to this name in 2 places in your JavaScript:
+  1. You'll call `ReactOnRails.registerStore({storeName})` in the same place that you register your components.
+  2. In your component definition, you'll call `ReactOnRails.getStore('storeName')` to get the hydrated Redux store to attach to your components.
++ **props:**  ReactOnRails takes care of setting up the hydration of your store with props from the view.
 
 #### Generator Functions
 Why would you create a function that returns a React compnent? For example, you may want the ability to use the passed-in props to initialize a redux store or setup react-router. Or you may want to return different components depending on what's in the props. ReactOnRails will automatically detect a registered generator function.

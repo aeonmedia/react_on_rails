@@ -21,14 +21,14 @@ Contributors: please follow the recommendations outlined at [keepachangelog.com]
   You'll get a deprecation message to change this.
 - Renamed `ReactOnRails.configure_rspec_to_compile_assets` to `ReactOnRails::TestHelper.configure_rspec_to_compile_assets`. The code has also been optimized to check for whether or not the compiled webpack bundles are up to date or not and will not run if not necessary. If you are using non-standard directories for your generated webpack assets (`app/assets/javascripts/generated` and `app/assets/stylesheets/generated`) or have additional directories you wish the helper to check, you need to update your ReactOnRails configuration accordingly. See [documentation](https://github.com/shakacode/react_on_rails/blob/master/docs/additional_reading/rspec_configuration.md) for how to do this.  [#253](https://github.com/shakacode/react_on_rails/pull/253).
   
-##### Migration
+##### Migration Steps v2 to v3
 - [spec/dummy/spec/rails_helper.rb](https://github.com/shakacode/react_on_rails/blob/master/spec%2Fdummy%2Fspec%2Frails_helper.rb#L36..38) for an example. Add this line to your `rails_helper.rb`:
 ```ruby
 RSpec.configure do |config|
   # Ensure that if we are running js tests, we are using latest webpack assets
   ReactOnRails::TestHelper.configure_rspec_to_compile_assets(config)
 ```
-- Change view helper calls to react_component to use the named param of `props`.
+- Change view helper calls to react_component to use the named param of `props`. See forum post [Using Regexp to update to ReactOnRails v3](http://forum.shakacode.com/t/using-regexp-to-update-to-reactonrails-v3/481).
 
 ## [2.3.0] - 2016-02-01
 ##### Added
